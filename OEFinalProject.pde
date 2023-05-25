@@ -8,6 +8,8 @@ ArrayList<String> chinaImages = new ArrayList<String>();
 ArrayList<String> purdueImages = new ArrayList<String>();
 ArrayList<String> medellinImages = new ArrayList<String>();
 
+float r;
+
 final int windowX = 400;
 final int windowY = 400;
 
@@ -50,12 +52,30 @@ void draw()
   ellipse(width/2, height/2, tam, tam);
   
   chinaPercent = (tam - 100)/100;
-  indianaPercent = abs(tam - 200)/100;
-  medellinPercent = (tam + 100)/100;
+  medellinPercent = abs(tam - 200)/100;
+  indianaPercent = (tam + 100)/100;
+  
+  if (chinaPercent > 0){
+    r = random(1);
+    if (r < chinaPercent) {
+      centerImage = loadImage(chinaImages.get(int(random(chinaImages.size()))));
+    }
+    else{
+      centerImage = loadImage(medellinImages.get(int(random(medellinImages.size()))));
+    }
+  }
+  else if (indianaPercent > 0){
+    r = random(1);
+    if (r < indianaPercent) {
+      centerImage = loadImage(purdueImages.get(int(random(purdueImages.size()))));
+    }
+    else {
+      centerImage = loadImage(medellinImages.get(int(random(medellinImages.size()))));
+    }
+  }
   
   
-  
-  centerImage = loadImage(purdueImages.get(int(random(purdueImages.size()))));
+  //centerImage = loadImage(purdueImages.get(int(random(purdueImages.size()))));
   image(centerImage, windowX/2, windowY/2);
   
   
