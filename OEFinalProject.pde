@@ -1,4 +1,4 @@
-import processing.serial.*;
+
 
 ArrayList<PImage> chinaImages = new ArrayList<PImage>();
 ArrayList<PImage> purdueImages = new ArrayList<PImage>();
@@ -9,35 +9,18 @@ String fullPath = "C:/Users/Garrett Rodgers/Pictures/backgrounds";
 
 int readSerial;
 int tam;
-char myKey;
-int op =0;
-Serial myPort;
+SonicA myPort;
 
 void setup()
 {
   size(400, 400);
-  String portName = Serial.list()[0];
-  myPort = new Serial(this, portName, 115200);
-  
+  myPort = new SonicA(this);
 }
 
 
 void draw()
 {
   background(64);
-  if (myPort.available()>0)
-  {
-    readSerial = myPort.read();
-    //map (lecturaUltrasonido, 0,20,20,200);
-    println(readSerial);
-
-    if (readSerial>100)
-    {
-      tam=readSerial;
-    } else { 
-      op= readSerial;
-      println("OP= "+op);
-    }
-  }
+  tam= myPort.readSerial();
   ellipse(width/2, height/2, tam, tam);
 }
