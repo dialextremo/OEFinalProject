@@ -4,9 +4,9 @@ import processing.serial.*;
 
 PImage centerImage;
 
-ArrayList<String> chinaImages = new ArrayList<PImage>();
-ArrayList<String> purdueImages = new ArrayList<String>();
-ArrayList<String> medellinImages = new ArrayList<String>();
+StringList chinaImages;
+StringList purdueImages;
+StringList medellinImages;
 
 float r;
 
@@ -28,12 +28,13 @@ Serial myPort;
 void setup()
 {
   size(400, 400);
+  imageMode(CENTER);
   String portName = Serial.list()[0];
   myPort = new Serial(this, portName, 115200);
   for (int i = 0; i < 3; ++i) {
     for (int j = 0; j < 2; ++j) {
     String imageName = i+"-"+j;
-    chinaImages.add(imageName);
+    chinaImages.append(imageName);
     println(imageName);
     }
   }
@@ -60,16 +61,16 @@ void draw()
   if (chinaPercent > 0){
     r = random(1);
     if (r < chinaPercent) {
-      centerImage = loadImage(chinaImages.get(int(random(chinaImages.size()))));
+      centerImage = loadImage(chinaImages.get(int(random(1))));
     }
     else{
-      centerImage = loadImage(medellinImages.get(int(random(medellinImages.size()))));
+      centerImage = loadImage(medellinImages.get(int(random(1))));
     }
   }
   else if (indianaPercent > 0){
     r = random(1);
     if (r < indianaPercent) {
-      centerImage = loadImage(purdueImages.get(int(random(purdueImages.size()))));
+      centerImage = loadImage(purdueImages.get(int(random(1))));
     }
     else {
       centerImage = loadImage(medellinImages.get(int(random(medellinImages.size()))));
