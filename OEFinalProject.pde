@@ -18,7 +18,7 @@ float chinaPercent, indianaPercent, medellinPercent;
 int readSerial;
 int tam;
 Serial myPort;
-
+float r;
 
 
 void setup()
@@ -42,27 +42,23 @@ void setup()
         purdueImages.add(imageName);
         break;
       }
-
-      println(imageName);
-
     }
     oscP5 = new OscP5(this, 12000);
+  }
 }
-
 void draw()
 {
-    background(64);
-    if (myPort.available()>0)
-        {
-        readSerial = myPort.read();
-        println(readSerial);
-        if (readSerial > 10)
-        {
-            tam = readSerial;
-        }
+  background(64);
+  if (myPort.available()>0)
+  {
+    readSerial = myPort.read();
+    println(readSerial);
+    if (readSerial > 10)
+    {
+      tam = readSerial;
     }
-
   }
+
   ellipse(width/2, height/2, tam, tam);
 
   chinaPercent = (tam - 100)/100;
@@ -87,6 +83,11 @@ void draw()
 
 
   //centerImage = loadImage(purdueImages.get(int(random(purdueImages.size()))));
-  image(centerImage, windowX/2, windowY/2);
+  //image(centerImage, windowX/2, windowY/2);
 
+
+
+  //OscMessage message = new OscMessage("/chuck/crossFade");
+  //message.add(0.5); // Frecuencia
+  //oscP5.send(message, chuckAddress);
 }
