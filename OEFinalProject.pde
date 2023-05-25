@@ -1,22 +1,19 @@
 
 import processing.serial.*;
 
+PImage centerImage;
 
-PImage amogus = loadImage("amogus.png");
-PImage spiderman = loadImage("spiderman.png");
-PImage flags = loadImage("flags.png");
+ArrayList<String> chinaImages = new ArrayList<String>();
+ArrayList<String> purdueImages = new ArrayList<String>();
+ArrayList<String> medellinImages = new ArrayList<String>();
 
-ArrayList<PImage> chinaImages = new ArrayList<PImage>();
-ArrayList<PImage> purdueImages = new ArrayList<PImage>();
-ArrayList<PImage> medellinImages = new ArrayList<PImage>();
+float chinaPercent, indianaPercent, medellinPercent;
 
 int chinaSize = chinaImages.size();
 
-
-
 int readSerial;
 int tam;
-SonicA myPort;
+Serial myPort;
 
 void setup()
 {
@@ -24,10 +21,7 @@ void setup()
 
   String portName = Serial.list()[0];
   myPort = new Serial(this, portName, 115200);
-  chinaImages.add(amogus);
-  purdueImages.add(spiderman);
-  medellinImages.add(flags);
-   
+
 
 }
 
@@ -36,7 +30,11 @@ void draw()
   background(64);
   tam= myPort.readSerial();
   ellipse(width/2, height/2, tam, tam);
-  if (tam > 66){
-    image(chinaImages<random(chinaImages.size())>, 200, 200);
-  }
+  
+  chinaPercent = (tam - 100)/100;
+  indianaPercent = abs(tam - 200)/100;
+  medellinPercent = (tam + 100)/100
+  
+  
+  
 }
