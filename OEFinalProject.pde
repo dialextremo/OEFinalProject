@@ -4,7 +4,7 @@ import processing.serial.*;
 
 PImage centerImage;
 
-ArrayList<String> chinaImages = new ArrayList<String>();
+ArrayList<String> chinaImages = new ArrayList<PImage>();
 ArrayList<String> purdueImages = new ArrayList<String>();
 ArrayList<String> medellinImages = new ArrayList<String>();
 
@@ -23,18 +23,20 @@ int readSerial;
 int tam;
 Serial myPort;
 
+
+
 void setup()
 {
   size(400, 400);
-  imageMode(CENTER);
-
   String portName = Serial.list()[0];
   myPort = new Serial(this, portName, 115200);
-  chinaImages.add("amogus.png");
-  purdueImages.add("spiderman.png");
-  medellinImages.add("flags.png");
-
-
+  for (int i = 0; i < 3; ++i) {
+    for (int j = 0; j < 2; ++j) {
+    String imageName = i+"-"+j;
+    chinaImages.add(imageName);
+    println(imageName);
+    }
+  }
 }
 
 void draw()
@@ -82,5 +84,5 @@ void draw()
   
   
   
-  
+
 }
