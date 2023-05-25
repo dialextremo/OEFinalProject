@@ -1,11 +1,11 @@
 import processing.serial.*;
+import java.io.File;
+
 
 ArrayList<PImage> chinaImages = new ArrayList<PImage>();
 ArrayList<PImage> purdueImages = new ArrayList<PImage>();
 ArrayList<PImage> medellinImages = new ArrayList<PImage>();
 
-String[] filenames;
-String fullPath = "C:/Users/Garrett Rodgers/Pictures/backgrounds";
 
 int readSerial;
 int tam;
@@ -18,9 +18,8 @@ void setup()
   size(400, 400);
   String portName = Serial.list()[0];
   myPort = new Serial(this, portName, 115200);
-  
+   
 }
-
 
 void draw()
 {
