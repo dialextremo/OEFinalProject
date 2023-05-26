@@ -12,12 +12,12 @@ SoundFile testMusic;
 OscP5 oscP5;
 NetAddress chuckAddress;
 
-ArrayList<String> chinaImages = new ArrayList<String>();
-ArrayList<String> purdueImages = new ArrayList<String>();
-ArrayList<String> medellinImages = new ArrayList<String>();
-
+PImage []chinaimages = new PImage [5];
+PImage []medellinimages = new PImage [6];
+PImage []purdueimages = new PImage [5];
 
 float tempVar = 0.0;
+float angle;
 float r;
 float colorRandomness = random(200);
 
@@ -43,41 +43,22 @@ void setup()
 
   imageMode(CENTER);
   frameRate(24);
+  oscP5 = new OscP5(this, 12000);
   /*
   String portName = Serial.list()[0];
   myPort = new Serial(this, portName, 115200);
   */
-  for (int i = 0; i < 3; ++i) {
-    for (int j = 0; j < 3; ++j) {
-      String imageName = i+"-"+j+".png";
-      switch (i) {
-      case 0:
-        chinaImages.add(imageName);
-        break;
-      case 1:
-        medellinImages.add(imageName);
-        break;
-      case 2:
-        purdueImages.add(imageName);
-        break;
-      }
-    }
-    oscP5 = new OscP5(this, 12000);
-  }
 
-   myPort = new Serial(this, Serial.list()[0], 9600);
-  myPort.bufferUntil('\n'); 
+  //myPort = new Serial(this, Serial.list()[0], 9600);
+  //myPort.bufferUntil('\n'); 
 
-  getImages();
+  createPImages();
 
-  oscP5 = new OscP5(this, 12000);
-  testMusic = new SoundFile(this, "exSong.mp3");
-  testMusic.loop();
 }
 void draw()
 {
 
-  background(((frameChecker%10)*20)+colorRandomness, abs(((frameChecker%70)*5)-colorRandomness), ((frameChecker%40)*3)+colorRandomness);
+  background((frameChecker*20)+colorRandomness, abs((frameChecker*5)-colorRandomness), (frameChecker*3)+colorRandomness);
   
   /*
   if (myPort.available()>0)
@@ -93,45 +74,35 @@ void draw()
   ellipse(width/2, height/2, tam, tam);
 */
   if (frameChecker%48 == 0){
-    chinaPercent = (tempVar - 100)/100;
-    if (tempVar >= 100) {
-      medellinPercent = abs(tempVar - 200)/100;
-      indianaPercent = 0;
-    }
-    else {
-      indianaPercent = abs(tempVar - 100)/100;
-      medellinPercent = tempVar/100;
-    }
-    colorRandomness = random(200);
-    centerImage = loadImage(calculatePImage());
-    sideImages = loadImage(calculatePImage());
-    siderImages = loadImage(calculatePImage());
+    beatHits();
   }
 
-  //centerImage = loadImage(purdueImages.get(int(random(purdueImages.size()))));
-  centerImage.resize(((frameChecker%12)*12+int(centerX*2)), 0);
-  sideImages.resize(((-frameChecker%12)*12+int(centerX)), 0);
-  siderImages.resize(((frameChecker%12)*12+int(centerX*1.5)), 0);
-  
   translate(centerX, centerY);
   
-  tint(((255 - (frameChecker%10)*20)+colorRandomness), 255 - abs(((frameChecker%70)*5)-colorRandomness), 255 - ((frameChecker%40)*3)+colorRandomness, 80);
-  rotate(-0.1*tempVar);
-  image(centerImage, 0, 0);
-  rotate(0.2*tempVar);
-  scale(((tempVar%12)+0.1)/12, 1);
-  tint((((frameChecker%6)*8)+colorRandomness), abs(((frameChecker%40)*5)-colorRandomness), ((frameChecker%13)*3)+colorRandomness, 80);
-  image(sideImages,(windowX/4), (windowY/4));
-  image(sideImages, -(windowX/4), (windowY/4));
-  image(sideImages, (windowX/4), -(windowY/4));
-  image(sideImages, -(windowX/4), -(windowY/4));
-  scale(12/((tempVar%12)+0.1), 1);
-  rotate(-0.3*tempVar);
-  tint((((frameChecker%4)*12)+colorRandomness), abs(((frameChecker%14)*8)-colorRandomness), ((frameChecker%13)*3)+colorRandomness, 70);
-  image(siderImages, (windowX/3), (windowY/3));
-  image(siderImages, -(windowX/3), (windowY/3));
-  image(siderImages, (windowX/3), -(windowY/3));
-  image(siderImages, -(windowX/3), -(windowY/3));
+  //tint(((255 - (frameChecker%10)*20)+colorRandomness), 255 - abs(((frameChecker%70)*5)-colorRandomness), 255 - ((frameChecker%40)*3)+colorRandomness, 80);
+  //rotate(-0.1*tempVar);
+  angle = sin(frameChecker*0.1);
+  image(centerImage, 0, 0, map(angle, -1, 1, 400, 1000), map(angle, -1, 1, 400, 1000));
+  
+  pushMatrix();
+  rotate(0.02*tempVar);
+  //scale(((tempVar%50)+0.1)/100, 1);
+  //tint((((frameChecker%6)*8)+colorRandomness), abs(((frameChecker%40)*5)-colorRandomness), ((frameChecker%13)*3)+colorRandomness, 80);
+  image(sideImages,(centerX/4), (centerY/4), map(angle, -1, 1, 300, 800), map(angle, -1, 1, 300, 800));
+  image(sideImages, -(centerX/4), (centerY/4), map(angle, -1, 1, 300, 800), map(angle, -1, 1, 300, 800));
+  image(sideImages, (centerX/4), -(centerY/4), map(angle, -1, 1, 300, 800), map(angle, -1, 1, 300, 800));
+  image(sideImages, -(centerX/4), -(centerY/4), map(angle, -1, 1, 300, 800), map(angle, -1, 1, 300, 800));
+  popMatrix();
+  
+  pushMatrix();
+  rotate(-0.03*tempVar);
+  //tint((((frameChecker%4)*12)+colorRandomness), abs(((frameChecker%14)*8)-colorRandomness), ((frameChecker%13)*3)+colorRandomness, 70);
+  image(siderImages, (windowX/3), (windowY/3), map(angle, -1, 1, 400, 1200), map(angle, -1, 1, 400, 1200));
+  image(siderImages, -(windowX/3), (windowY/3), map(angle, -1, 1, 400, 1200), map(angle, -1, 1, 400, 1200));
+  image(siderImages, (windowX/3), -(windowY/3), map(angle, -1, 1, 400, 1200), map(angle, -1, 1, 400, 1200));
+  image(siderImages, -(windowX/3), -(windowY/3), map(angle, -1, 1, 400, 1200), map(angle, -1, 1, 400, 1200));
+  popMatrix();
+
 
   if (frameChecker == 0){
    goingUp = 1;
@@ -141,34 +112,32 @@ void draw()
   }
   frameChecker += goingUp;
 
-  ellipse(joystickX, joystickY, 20,20);
-
+  //ellipse(joystickX, joystickY, 20,20);
+  //centerX += tempVar;
+  //centerY += tempVar;
   tempVar += 1;
-  frameChecker += 1;
 
 }
 
-String calculatePImage(){
-  int listGrabber = int(random(3));
+PImage calculatePImage(){
+  int listGrabber = int(random(2));
   if (chinaPercent > 0) {
     r = random(1);
     if (r < chinaPercent) {
-      return(chinaImages.get(listGrabber));
+      return(chinaimages[listGrabber]);
     } else {
-      return(medellinImages.get(listGrabber));
+      return(medellinimages[listGrabber]);
     }
   } else if (indianaPercent > 0) {
     r = random(1);
     if (r < indianaPercent) {
-      return(purdueImages.get(listGrabber));
+      return(purdueimages[listGrabber]);
     } else {
-      return(medellinImages.get(listGrabber));
+      return(medellinimages[listGrabber]);
     }
   } else{
-    return(medellinImages.get(listGrabber));
+    return(medellinimages[listGrabber]);
   }
-
-
 
   //OscMessage message = new OscMessage("/chuck/crossFade");
   //message.add(0.5); // Frecuencia
@@ -195,23 +164,40 @@ void serialEvent( Serial myPort)
 
   }
 }  
-void getImages()
-{
 
-  for (int i = 0; i < 3; ++i) {
-    for (int j = 0; j < 2; ++j) {
-      String imageName = i+"-"+j+".png";
-      switch (i) {
-      case 0:
-        chinaImages.add(imageName);
-        break;
-      case 1:
-        medellinImages.add(imageName);
-        break;
-      case 2:
-        purdueImages.add(imageName);
-        break;
-      }
-    }
+
+void createPImages(){
+  for (int i=0; i < chinaimages.length; i++){
+    String imageName = "0-" + i+".png"; //image loaders
+    chinaimages[i]= loadImage(imageName);
+    
   }
+  
+  for (int i=0; i < purdueimages.length; i++){
+    String imageName = "1-" + i+".png"; //image loaders
+    purdueimages[i]= loadImage(imageName);
+    
+  }
+  
+    for (int i=0; i < medellinimages.length; i++){
+    String imageName = "2-" + i+".png"; //image loaders
+    medellinimages[i]= loadImage(imageName);
+    
+  }
+}
+
+void beatHits(){
+  chinaPercent = (tempVar - 100)/100;
+    if (tempVar >= 100) {
+      medellinPercent = abs(tempVar - 200)/100;
+      indianaPercent = 0;
+    }
+    else {
+      indianaPercent = abs(tempVar - 100)/100;
+      medellinPercent = tempVar/100;
+    }
+    colorRandomness = random(200);
+    centerImage = calculatePImage();
+    sideImages = calculatePImage();
+    siderImages = calculatePImage();  
 }
