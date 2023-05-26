@@ -61,6 +61,7 @@ void draw()
   background(angle*colorRandomness + 100, -colorRandomness*angle, angle*colorRandomness + 100);
 
   serialEvent(myPort);
+  tempVar = map(joystickX, 0, 1023, -1,1);
   if (frameChecker%12 == 0){
    beatHits();
   }
@@ -90,7 +91,7 @@ void draw()
 
 
   frameChecker += 1;
-  ellipse(joystickX*30, joystickY*30, 20, 20);
+  ellipse(joystickX, joystickY, 20, 20);
 
   //tempVar = map(angle, -1, 1, 0, 1);
 
@@ -137,7 +138,7 @@ void serialEvent( Serial myPort)
     joystickB= vals[2];
 
   }
-} 
+}  
 
 
 void createPImages(){
