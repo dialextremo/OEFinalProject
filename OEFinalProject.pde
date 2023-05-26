@@ -17,6 +17,7 @@ PImage []medellinimages = new PImage [6];
 PImage []purdueimages = new PImage [5];
 
 float tempVar = 0.0;
+float imageScaler;
 float angle;
 float r;
 float colorRandomness = random(200);
@@ -42,7 +43,7 @@ void setup()
   size(1000, 1000);
 
   imageMode(CENTER);
-  frameRate(24);
+  frameRate(12);
   oscP5 = new OscP5(this, 12000);
   /*
   String portName = Serial.list()[0];
@@ -70,37 +71,34 @@ void draw()
       tam = readSerial;
     }
   }
-
-  ellipse(width/2, height/2, tam, tam);
 */
-  if (frameChecker%48 == 0){
+
+  if (frameChecker%12 == 0){
     beatHits();
   }
 
-  translate(centerX, centerY);
-  
-  //tint(((255 - (frameChecker%10)*20)+colorRandomness), 255 - abs(((frameChecker%70)*5)-colorRandomness), 255 - ((frameChecker%40)*3)+colorRandomness, 80);
-  //rotate(-0.1*tempVar);
   angle = sin(frameChecker*0.1);
-  image(centerImage, 0, 0, map(angle, -1, 1, 400, 1000), map(angle, -1, 1, 400, 1000));
+  image(centerImage, centerX, centerY, map(angle, -1, 1, 400, 1000), map(angle, -1, 1, 400, 1000));
   
+  imageScaler = map(angle, -1, 1, 300, 800);
   pushMatrix();
-  rotate(0.02*tempVar);
+  rotate(2*tempVar);
   //scale(((tempVar%50)+0.1)/100, 1);
   //tint((((frameChecker%6)*8)+colorRandomness), abs(((frameChecker%40)*5)-colorRandomness), ((frameChecker%13)*3)+colorRandomness, 80);
-  image(sideImages,(centerX/4), (centerY/4), map(angle, -1, 1, 300, 800), map(angle, -1, 1, 300, 800));
-  image(sideImages, -(centerX/4), (centerY/4), map(angle, -1, 1, 300, 800), map(angle, -1, 1, 300, 800));
-  image(sideImages, (centerX/4), -(centerY/4), map(angle, -1, 1, 300, 800), map(angle, -1, 1, 300, 800));
-  image(sideImages, -(centerX/4), -(centerY/4), map(angle, -1, 1, 300, 800), map(angle, -1, 1, 300, 800));
+  image(sideImages, centerX+(centerX/4), (centerY/4), imageScaler, imageScaler);
+  image(sideImages, centerX-(centerX/4), (centerY/4), imageScaler, imageScaler);
+  image(sideImages, centerX+(centerX/4), -(centerY/4), imageScaler, imageScaler);
+  image(sideImages, centerX-(centerX/4), -(centerY/4), imageScaler, imageScaler);
   popMatrix();
   
+  imageScaler = map(angle, -1, 1, 400, 1200);
   pushMatrix();
-  rotate(-0.03*tempVar);
+  rotate(-3*tempVar);
   //tint((((frameChecker%4)*12)+colorRandomness), abs(((frameChecker%14)*8)-colorRandomness), ((frameChecker%13)*3)+colorRandomness, 70);
-  image(siderImages, (windowX/3), (windowY/3), map(angle, -1, 1, 400, 1200), map(angle, -1, 1, 400, 1200));
-  image(siderImages, -(windowX/3), (windowY/3), map(angle, -1, 1, 400, 1200), map(angle, -1, 1, 400, 1200));
-  image(siderImages, (windowX/3), -(windowY/3), map(angle, -1, 1, 400, 1200), map(angle, -1, 1, 400, 1200));
-  image(siderImages, -(windowX/3), -(windowY/3), map(angle, -1, 1, 400, 1200), map(angle, -1, 1, 400, 1200));
+  image(siderImages, centerX+(centerX/3), (centerY/3), imageScaler, imageScaler);
+  image(siderImages, centerX-(centerX/3), (centerY/3), imageScaler, imageScaler);
+  image(siderImages, centerX+(centerX/3), -(centerY/3), imageScaler, imageScaler);
+  image(siderImages, centerX-(centerX/3), -(centerY/3), imageScaler, imageScaler);
   popMatrix();
 
 
@@ -113,30 +111,26 @@ void draw()
   frameChecker += goingUp;
 
   //ellipse(joystickX, joystickY, 20,20);
-  //centerX += tempVar;
-  //centerY += tempVar;
-  tempVar += 1;
+
+  tempVar = map(angle, -1, 1, 0, 1);
 
 }
 
 PImage calculatePImage(){
-  int listGrabber = int(random(2));
   if (chinaPercent > 0) {
     r = random(1);
     if (r < chinaPercent) {
-      return(chinaimages[listGrabber]);
+      return(chinaimages[int(random(chinaimages.length))]);
     } else {
-      return(medellinimages[listGrabber]);
+      return(medellinimages[int(random(medellinimages.length))]);
     }
-  } else if (indianaPercent > 0) {
+  } else {
     r = random(1);
     if (r < indianaPercent) {
-      return(purdueimages[listGrabber]);
+      return(purdueimages[int(random(purdueimages.length))]);
     } else {
-      return(medellinimages[listGrabber]);
+      return(medellinimages[int(random(medellinimages.length))]);
     }
-  } else{
-    return(medellinimages[listGrabber]);
   }
 
   //OscMessage message = new OscMessage("/chuck/crossFade");
@@ -168,33 +162,35 @@ void serialEvent( Serial myPort)
 
 void createPImages(){
   for (int i=0; i < chinaimages.length; i++){
-    String imageName = "0-" + i+".png"; //image loaders
+    String imageName = "2-" + i+".png"; //image loaders
     chinaimages[i]= loadImage(imageName);
     
   }
   
   for (int i=0; i < purdueimages.length; i++){
-    String imageName = "1-" + i+".png"; //image loaders
+    String imageName = "0-" + i+".png"; //image loaders
     purdueimages[i]= loadImage(imageName);
     
   }
   
     for (int i=0; i < medellinimages.length; i++){
-    String imageName = "2-" + i+".png"; //image loaders
+    String imageName = "1-" + i+".png"; //image loaders
     medellinimages[i]= loadImage(imageName);
     
   }
 }
 
 void beatHits(){
-  chinaPercent = (tempVar - 100)/100;
-    if (tempVar >= 100) {
-      medellinPercent = abs(tempVar - 200)/100;
+  
+    if (tempVar >= 0.5) {
+      medellinPercent = (1 - tempVar)*2;
       indianaPercent = 0;
+      chinaPercent = 2*(tempVar - 0.5);
     }
     else {
-      indianaPercent = abs(tempVar - 100)/100;
-      medellinPercent = tempVar/100;
+      indianaPercent = 2*abs(0.5 - tempVar);
+      medellinPercent = tempVar*2;
+      chinaPercent = 0;
     }
     colorRandomness = random(200);
     centerImage = calculatePImage();
