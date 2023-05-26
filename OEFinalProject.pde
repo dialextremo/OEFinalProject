@@ -76,29 +76,29 @@ void draw()
   if (frameChecker%12 == 0){
     beatHits();
   }
-
+  translate(centerX, centerY);
   angle = sin(frameChecker*0.1);
-  image(centerImage, centerX, centerY, map(angle, -1, 1, 400, 1000), map(angle, -1, 1, 400, 1000));
+  image(centerImage, 0, 0, map(angle, -1, 1, 400, 1000), map(angle, -1, 1, 400, 1000));
   
   imageScaler = map(angle, -1, 1, 300, 800);
   pushMatrix();
   rotate(2*tempVar);
   //scale(((tempVar%50)+0.1)/100, 1);
   //tint((((frameChecker%6)*8)+colorRandomness), abs(((frameChecker%40)*5)-colorRandomness), ((frameChecker%13)*3)+colorRandomness, 80);
-  image(sideImages, centerX+(centerX/4), (centerY/4), imageScaler, imageScaler);
-  image(sideImages, centerX-(centerX/4), (centerY/4), imageScaler, imageScaler);
-  image(sideImages, centerX+(centerX/4), -(centerY/4), imageScaler, imageScaler);
-  image(sideImages, centerX-(centerX/4), -(centerY/4), imageScaler, imageScaler);
+  image(sideImages, (centerX/4), (centerY/4), imageScaler, imageScaler);
+  image(sideImages, -(centerX/4), (centerY/4), imageScaler, imageScaler);
+  image(sideImages, (centerX/4), -(centerY/4), imageScaler, imageScaler);
+  image(sideImages, -(centerX/4), -(centerY/4), imageScaler, imageScaler);
   popMatrix();
   
   imageScaler = map(angle, -1, 1, 400, 1200);
   pushMatrix();
   rotate(-3*tempVar);
   //tint((((frameChecker%4)*12)+colorRandomness), abs(((frameChecker%14)*8)-colorRandomness), ((frameChecker%13)*3)+colorRandomness, 70);
-  image(siderImages, centerX+(centerX/3), (centerY/3), imageScaler, imageScaler);
-  image(siderImages, centerX-(centerX/3), (centerY/3), imageScaler, imageScaler);
-  image(siderImages, centerX+(centerX/3), -(centerY/3), imageScaler, imageScaler);
-  image(siderImages, centerX-(centerX/3), -(centerY/3), imageScaler, imageScaler);
+  image(siderImages, (centerX/3), (centerY/3), imageScaler, imageScaler);
+  image(siderImages, -(centerX/3), (centerY/3), imageScaler, imageScaler);
+  image(siderImages, (centerX/3), -(centerY/3), imageScaler, imageScaler);
+  image(siderImages, -(centerX/3), -(centerY/3), imageScaler, imageScaler);
   popMatrix();
 
 
