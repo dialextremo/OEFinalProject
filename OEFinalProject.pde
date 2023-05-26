@@ -27,8 +27,8 @@ int goingUp = 1;
 final int windowX = 1000;
 final int windowY = 1000;
 
-float centerX = windowX/2.0;
-float centerY = windowY/2.0;
+float centerX;
+float centerY;
 float chinaPercent, indianaPercent, medellinPercent;
 
 int tam;
@@ -40,10 +40,13 @@ String joystickReading;
 
 void setup()
 {
-  size(1000, 1000);
+  //size(1000, 1000);
+  fullScreen();
+  centerX = width/2.0;
+  centerY = height/2.0;
 
   imageMode(CENTER);
-  frameRate(12);
+  frameRate(24);
   oscP5 = new OscP5(this, 12000);
   /*
   String portName = Serial.list()[0];
@@ -54,12 +57,12 @@ void setup()
   //myPort.bufferUntil('\n'); 
 
   createPImages();
-
+  beatHits();
 }
 void draw()
 {
-
-  background((frameChecker*20)+colorRandomness, abs((frameChecker*5)-colorRandomness), (frameChecker*3)+colorRandomness);
+  background(200, 0, 200);
+  background(angle*colorRandomness + 100, -colorRandomness*angle, angle*colorRandomness + 100);
   
   /*
   if (myPort.available()>0)
@@ -74,43 +77,34 @@ void draw()
 */
 
   if (frameChecker%12 == 0){
-    beatHits();
+   beatHits();
   }
-  translate(centerX, centerY);
+
+  translate(width/2, height/2);
   angle = sin(frameChecker*0.1);
-  image(centerImage, 0, 0, map(angle, -1, 1, 400, 1000), map(angle, -1, 1, 400, 1000));
+  image(centerImage, 0, 0, map(angle, -1, 1, 400, 800), map(angle, -1, 1, 400, 1000));
   
-  imageScaler = map(angle, -1, 1, 300, 800);
+  //imageScaler = map(angle, -1, 1, 300, 600);
   pushMatrix();
   rotate(2*tempVar);
-  //scale(((tempVar%50)+0.1)/100, 1);
-  //tint((((frameChecker%6)*8)+colorRandomness), abs(((frameChecker%40)*5)-colorRandomness), ((frameChecker%13)*3)+colorRandomness, 80);
-  image(sideImages, (centerX/4), (centerY/4), imageScaler, imageScaler);
-  image(sideImages, -(centerX/4), (centerY/4), imageScaler, imageScaler);
-  image(sideImages, (centerX/4), -(centerY/4), imageScaler, imageScaler);
-  image(sideImages, -(centerX/4), -(centerY/4), imageScaler, imageScaler);
+  image(sideImages, (centerX/4), (centerY/4));
+  image(sideImages, -(centerX/4), (centerY/4));
+  image(sideImages, (centerX/4), -(centerY/4));
+  image(sideImages, -(centerX/4), -(centerY/4));
   popMatrix();
   
-  imageScaler = map(angle, -1, 1, 400, 1200);
+  //imageScaler = map(angle, -1, 1, 400, 500);
   pushMatrix();
   rotate(-3*tempVar);
-  //tint((((frameChecker%4)*12)+colorRandomness), abs(((frameChecker%14)*8)-colorRandomness), ((frameChecker%13)*3)+colorRandomness, 70);
-  image(siderImages, (centerX/3), (centerY/3), imageScaler, imageScaler);
-  image(siderImages, -(centerX/3), (centerY/3), imageScaler, imageScaler);
-  image(siderImages, (centerX/3), -(centerY/3), imageScaler, imageScaler);
-  image(siderImages, -(centerX/3), -(centerY/3), imageScaler, imageScaler);
+  image(siderImages, (centerX/3), (centerY/3));
+  image(siderImages, -(centerX/3), (centerY/3));
+  image(siderImages, (centerX/3), -(centerY/3));
+  image(siderImages, -(centerX/3), -(centerY/3));
   popMatrix();
 
 
-  if (frameChecker == 0){
-   goingUp = 1;
-  }
-  else if (frameChecker == 12) {
-    goingUp = -1;
-  }
-  frameChecker += goingUp;
 
-  //ellipse(joystickX, joystickY, 20,20);
+  frameChecker += 1;
 
   tempVar = map(angle, -1, 1, 0, 1);
 
@@ -164,18 +158,21 @@ void createPImages(){
   for (int i=0; i < chinaimages.length; i++){
     String imageName = "2-" + i+".png"; //image loaders
     chinaimages[i]= loadImage(imageName);
+    chinaimages[i].resize(300,0);
     
   }
   
   for (int i=0; i < purdueimages.length; i++){
     String imageName = "0-" + i+".png"; //image loaders
     purdueimages[i]= loadImage(imageName);
+    purdueimages[i].resize(300,0);
     
   }
   
     for (int i=0; i < medellinimages.length; i++){
     String imageName = "1-" + i+".png"; //image loaders
     medellinimages[i]= loadImage(imageName);
+    medellinimages[i].resize(300,0);
     
   }
 }
