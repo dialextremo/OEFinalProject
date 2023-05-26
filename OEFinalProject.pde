@@ -1,5 +1,11 @@
 import processing.serial.*;
 import java.io.File;
+import processing.sound.*;
+
+PImage centerImage;
+PImage sideImages;
+SoundFile testMusic;
+
 import oscP5.*;
 import netP5.*;
 
@@ -16,12 +22,15 @@ ArrayList<String> medellinImages = new ArrayList<String>();
 float tempVar = 0.0;
 float r;
 
-final int windowX = 400;
-final int windowY = 400;
+
+final int windowX = 1000;
+final int windowY = 1000;
+
 float chinaPercent, indianaPercent, medellinPercent;
 
 int readSerial;
 int tam;
+int frameChecker = 0;
 Serial myPort;
 float r;
 
@@ -29,8 +38,10 @@ float r;
 void setup()
 {
 
-  size(400, 400);
+  size(1000, 1000);
+
   imageMode(CENTER);
+  frameRate(24);
   /*
   String portName = Serial.list()[0];
   myPort = new Serial(this, portName, 115200);
@@ -52,6 +63,8 @@ void setup()
     }
     oscP5 = new OscP5(this, 12000);
   }
+  testMusic = new SoundFile(this, "exSong.mp3");
+  testMusic.loop();
 }
 void draw()
 {
@@ -70,51 +83,50 @@ void draw()
 
   ellipse(width/2, height/2, tam, tam);
 */
-
-  chinaPercent = (tempVar - 100)/100; // this one is right
-  if (tempVar >= 100) {
-    medellinPercent = abs(tempVar - 200)/100;
-    indianaPercent = 0;
+  if (frameChecker%12 == 0){
+    chinaPercent = (tempVar - 100)/100;
+    if (tempVar >= 100) {
+      medellinPercent = abs(tempVar - 200)/100;
+      indianaPercent = 0;
+    }
+    else {
+      indianaPercent = abs(tempVar - 100)/100;
+      medellinPercent = tempVar/100;
+    }
+    centerImage = loadImage(calculatePImage());
+    sideImages = loadImage(calculatePImage());
   }
-  else {
-    indianaPercent = abs(tempVar - 100)/100;
-    medellinPercent = tempVar/100;
-  }
-  calculatePImage(centerImage);
 
   //centerImage = loadImage(purdueImages.get(int(random(purdueImages.size()))));
+  centerImage.resize(((frameChecker%24)*6+600), 0);
   image(centerImage, windowX/2, windowY/2);
   ellipse(tempVar, height/2, 20,20);
   tempVar += 1;
+  frameChecker += 1;
 }
 
-void calculatePImage(PImage myImage){
+String calculatePImage(){
+  int listGrabber = int(random(2));
   if (chinaPercent > 0) {
     r = random(1);
     if (r < chinaPercent) {
-      myImage = loadImage(chinaImages.get(0));
+      return(chinaImages.get(listGrabber));
     } else {
-      myImage = loadImage(medellinImages.get(0));
+      return(medellinImages.get(listGrabber));
     }
   } else if (indianaPercent > 0) {
     r = random(1);
     if (r < indianaPercent) {
-      myImage = loadImage(purdueImages.get(0));
+      return(purdueImages.get(listGrabber));
     } else {
-      myImage = loadImage(medellinImages.get(0));
+      return(medellinImages.get(listGrabber));
     }
   } else{
-    myImage = loadImage(medellinImages.get(0));
+    return(medellinImages.get(listGrabber));
   }
-
-  //centerImage = loadImage(purdueImages.get(int(random(purdueImages.size()))));
-  //image(centerImage, windowX/2, windowY/2);
-
-
 
   //OscMessage message = new OscMessage("/chuck/crossFade");
   //message.add(0.5); // Frecuencia
   //oscP5.send(message, chuckAddress);
-  centerImage = myImage;
-  
+
 }
