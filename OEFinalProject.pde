@@ -1,15 +1,13 @@
 import processing.serial.*;
 import java.io.File;
 import processing.sound.*;
+import oscP5.*;
+import netP5.*;
 
 PImage centerImage;
 PImage sideImages;
 PImage siderImages;
 SoundFile testMusic;
-
-import oscP5.*;
-import netP5.*;
-
 
 OscP5 oscP5;
 NetAddress chuckAddress;
@@ -18,12 +16,12 @@ ArrayList<String> chinaImages = new ArrayList<String>();
 ArrayList<String> purdueImages = new ArrayList<String>();
 ArrayList<String> medellinImages = new ArrayList<String>();
 
+
 float tempVar = 0.0;
 float r;
 float colorRandomness = random(200);
 
 int goingUp = 1;
-
 
 final int windowX = 1000;
 final int windowY = 1000;
@@ -32,15 +30,15 @@ float centerX = windowX/2.0;
 float centerY = windowY/2.0;
 float chinaPercent, indianaPercent, medellinPercent;
 
-int readSerial;
 int tam;
 int frameChecker = 0;
 Serial myPort;
 
+int joystickX, joystickY, joystickB;
+String joystickReading;
 
 void setup()
 {
-
   size(1000, 1000);
 
   imageMode(CENTER);
@@ -66,11 +64,19 @@ void setup()
     }
     oscP5 = new OscP5(this, 12000);
   }
+
+   myPort = new Serial(this, Serial.list()[0], 9600);
+  myPort.bufferUntil('\n'); 
+
+  getImages();
+
+  oscP5 = new OscP5(this, 12000);
   testMusic = new SoundFile(this, "exSong.mp3");
   testMusic.loop();
 }
 void draw()
 {
+
   background(((frameChecker%10)*20)+colorRandomness, abs(((frameChecker%70)*5)-colorRandomness), ((frameChecker%40)*3)+colorRandomness);
   
   /*
@@ -127,7 +133,6 @@ void draw()
   image(siderImages, (windowX/3), -(windowY/3));
   image(siderImages, -(windowX/3), -(windowY/3));
 
-  tempVar += 1;
   if (frameChecker == 0){
    goingUp = 1;
   }
@@ -135,7 +140,12 @@ void draw()
     goingUp = -1;
   }
   frameChecker += goingUp;
-    
+
+  ellipse(joystickX, joystickY, 20,20);
+
+  tempVar += 1;
+  frameChecker += 1;
+
 }
 
 String calculatePImage(){
@@ -164,4 +174,44 @@ String calculatePImage(){
   //message.add(0.5); // Frecuencia
   //oscP5.send(message, chuckAddress);
 
+}
+
+void serialEvent( Serial myPort) 
+{
+  // read the data until the newline n appears
+  joystickReading = myPort.readStringUntil('\n');
+  
+  if (joystickReading != null)
+  {
+        joystickReading = trim(joystickReading);
+        
+    // break up the decimal and new line reading
+    int[] vals = int(splitTokens(joystickReading, ","));
+    
+    // we assign to variables
+    joystickX = vals[0];
+    joystickY= vals[1] ;
+    joystickB= vals[2];
+
+  }
+}  
+void getImages()
+{
+
+  for (int i = 0; i < 3; ++i) {
+    for (int j = 0; j < 2; ++j) {
+      String imageName = i+"-"+j+".png";
+      switch (i) {
+      case 0:
+        chinaImages.add(imageName);
+        break;
+      case 1:
+        medellinImages.add(imageName);
+        break;
+      case 2:
+        purdueImages.add(imageName);
+        break;
+      }
+    }
+  }
 }
