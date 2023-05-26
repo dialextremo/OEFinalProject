@@ -1,16 +1,13 @@
 import processing.serial.*;
 import java.io.File;
 import processing.sound.*;
+import oscP5.*;
+import netP5.*;
 
 PImage centerImage;
 PImage sideImages;
 SoundFile testMusic;
 
-import oscP5.*;
-import netP5.*;
-
-
-PImage centerImage;
 OscP5 oscP5;
 NetAddress chuckAddress;
 
@@ -32,7 +29,6 @@ int readSerial;
 int tam;
 int frameChecker = 0;
 Serial myPort;
-float r;
 
 
 void setup()

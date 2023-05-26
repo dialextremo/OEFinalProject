@@ -4,17 +4,15 @@ OscRecv osc;
 440 => float freq; // Variable para almacenar la frecuencia
 
 // Configurar receptor OSC en el puerto 8888
-osc => OscRecv.recv(8888);
+osc.open(8888);
 
 while (true) {
   // Esperar mensajes OSC
-  osc => now;
-  
-  while (osc.message()) {
+  while (osc.recv()) {
     // Comprobar la dirección del mensaje
     if (osc.address() == "/chuck/play") {
       // Leer argumento de frecuencia del mensaje
-      osc => freq;
+      freq = osc.float32();
       
       // Reproducir sonido
       SinOsc s => dac;
