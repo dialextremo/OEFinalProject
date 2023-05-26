@@ -6,12 +6,22 @@ PImage centerImage;
 PImage sideImages;
 SoundFile testMusic;
 
+import oscP5.*;
+import netP5.*;
+
+
+PImage centerImage;
+OscP5 oscP5;
+NetAddress chuckAddress;
+
 ArrayList<String> chinaImages = new ArrayList<String>();
 ArrayList<String> purdueImages = new ArrayList<String>();
 ArrayList<String> medellinImages = new ArrayList<String>();
 
+
 float tempVar = 0.0;
 float r;
+
 
 final int windowX = 1000;
 final int windowY = 1000;
@@ -22,12 +32,14 @@ int readSerial;
 int tam;
 int frameChecker = 0;
 Serial myPort;
-
+float r;
 
 
 void setup()
 {
+
   size(1000, 1000);
+
   imageMode(CENTER);
   frameRate(24);
   /*
@@ -48,14 +60,12 @@ void setup()
         purdueImages.add(imageName);
         break;
       }
-
-      println(imageName);
     }
+    oscP5 = new OscP5(this, 12000);
   }
   testMusic = new SoundFile(this, "exSong.mp3");
   testMusic.loop();
 }
-
 void draw()
 {
   background(64);
@@ -65,11 +75,12 @@ void draw()
   {
     readSerial = myPort.read();
     println(readSerial);
-    if (readSerial>10)
+    if (readSerial > 10)
     {
-      tam=readSerial;
+      tam = readSerial;
     }
   }
+
   ellipse(width/2, height/2, tam, tam);
 */
   if (frameChecker%12 == 0){
@@ -113,4 +124,9 @@ String calculatePImage(){
   } else{
     return(medellinImages.get(listGrabber));
   }
+
+  //OscMessage message = new OscMessage("/chuck/crossFade");
+  //message.add(0.5); // Frecuencia
+  //oscP5.send(message, chuckAddress);
+
 }
