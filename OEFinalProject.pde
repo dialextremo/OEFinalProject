@@ -48,13 +48,9 @@ void setup()
   imageMode(CENTER);
   frameRate(24);
   oscP5 = new OscP5(this, 12000);
-  /*
-  String portName = Serial.list()[0];
-  myPort = new Serial(this, portName, 115200);
-  */
 
-  //myPort = new Serial(this, Serial.list()[0], 9600);
-  //myPort.bufferUntil('\n'); 
+  myPort = new Serial(this, Serial.list()[0], 9600);
+  myPort.bufferUntil('\n'); 
 
   createPImages();
   beatHits();
@@ -63,30 +59,19 @@ void draw()
 {
   background(200, 0, 200);
   background(angle*colorRandomness + 100, -colorRandomness*angle, angle*colorRandomness + 100);
-  
-  /*
-  if (myPort.available()>0)
-  {
-    readSerial = myPort.read();
-    println(readSerial);
-    if (readSerial > 10)
-    {
-      tam = readSerial;
-    }
-  }
-*/
 
+  serialEvent(myPort);
   if (frameChecker%12 == 0){
    beatHits();
   }
-
+  
   translate(width/2, height/2);
   angle = sin(frameChecker*0.1);
   image(centerImage, 0, 0, map(angle, -1, 1, 400, 800), map(angle, -1, 1, 400, 1000));
   
   //imageScaler = map(angle, -1, 1, 300, 600);
   pushMatrix();
-  rotate(2*tempVar);
+  rotate(2*angle);
   image(sideImages, (centerX/4), (centerY/4));
   image(sideImages, -(centerX/4), (centerY/4));
   image(sideImages, (centerX/4), -(centerY/4));
@@ -105,8 +90,9 @@ void draw()
 
 
   frameChecker += 1;
+  ellipse(joystickX*30, joystickY*30, 20, 20);
 
-  tempVar = map(angle, -1, 1, 0, 1);
+  //tempVar = map(angle, -1, 1, 0, 1);
 
 }
 
@@ -137,21 +123,21 @@ void serialEvent( Serial myPort)
 {
   // read the data until the newline n appears
   joystickReading = myPort.readStringUntil('\n');
-  
+
   if (joystickReading != null)
   {
         joystickReading = trim(joystickReading);
-        
+
     // break up the decimal and new line reading
     int[] vals = int(splitTokens(joystickReading, ","));
-    
+
     // we assign to variables
     joystickX = vals[0];
     joystickY= vals[1] ;
     joystickB= vals[2];
 
   }
-}  
+} 
 
 
 void createPImages(){
