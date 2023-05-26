@@ -12,8 +12,8 @@ SoundFile testMusic;
 OscP5 oscP5;
 NetAddress chuckAddress;
 
-PImage []chinaimages = new PImage [5];
-PImage []medellinimages = new PImage [6];
+PImage []chinaimages = new PImage [7];
+PImage []medellinimages = new PImage [9];
 PImage []purdueimages = new PImage [5];
 
 float tempVar = 0.0;
@@ -50,6 +50,7 @@ void setup()
   oscP5 = new OscP5(this, 12000);
 
   myPort = new Serial(this, Serial.list()[0], 9600);
+  println(Serial.list()[0]);
   myPort.bufferUntil('\n'); 
 
   createPImages();
@@ -72,7 +73,7 @@ void draw()
   
   //imageScaler = map(angle, -1, 1, 300, 600);
   pushMatrix();
-  rotate(2*angle);
+  rotate(2*tempVar+0.05*frameChecker);
   image(sideImages, (centerX/4), (centerY/4));
   image(sideImages, -(centerX/4), (centerY/4));
   image(sideImages, (centerX/4), -(centerY/4));
@@ -81,14 +82,12 @@ void draw()
   
   //imageScaler = map(angle, -1, 1, 400, 500);
   pushMatrix();
-  rotate(-3*tempVar);
+  rotate(-2*tempVar+0.05*frameChecker);
   image(siderImages, (centerX/3), (centerY/3));
   image(siderImages, -(centerX/3), (centerY/3));
   image(siderImages, (centerX/3), -(centerY/3));
   image(siderImages, -(centerX/3), -(centerY/3));
   popMatrix();
-
-
 
   frameChecker += 1;
   ellipse(joystickX, joystickY, 20, 20);
